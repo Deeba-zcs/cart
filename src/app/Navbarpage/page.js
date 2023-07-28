@@ -1,20 +1,25 @@
 'use client'
-import React from "react";
 import { useSelector } from "react-redux";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { BsFillCartPlusFill } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { logout } from "src/app/Store/registerslice.js"; // Import the logout action
-
+import React, { useEffect } from "react";
 function Navbarpage() {
   const cartProducts = useSelector((state) => state.signup.cartUser);
   const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
   const username = useSelector((state) => state.signup.username);
+  const router=useRouter()
   const dispatch = useDispatch();
-
+  const [cartLength, setCartLength] = React.useState(cartProducts.length);
+  useEffect(() => {
+    setCartLength(cartProducts.length);
+  }, [cartProducts]);
   const handleLogout = () => {
     dispatch(logout());
+   router.push("/signin")
   };
 
   return (
@@ -46,13 +51,13 @@ function Navbarpage() {
           ) : (
             <Navbar.Collapse className="justify-content-end">
               <Navbar.Text>
-                <Link href="/signin" passHref className="text-white text-decoration-none mx-2">
+                <Link href="/" passHref className="text-white text-decoration-none mx-2">
                   Login
                 </Link>
               </Navbar.Text>
               <Navbar.Text>
                 <Link href="/Cart" passHref className="text-white text-decoration-none">
-                  <BsFillCartPlusFill size={24} /> <sup>{cartProducts.length}</sup>{" "}
+                  <BsFillCartPlusFill size={24} /> <sup>{cartLength}</sup>{" "}
                 </Link>
               </Navbar.Text>
             </Navbar.Collapse>

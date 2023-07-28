@@ -10,28 +10,34 @@ function RegisteredUserList() {
   // console.log("registerd user", usedata);
   return (
     <>
-      <h1>Registered Users List</h1>
-      <thead className="text-primary">
-        <th>Sr.</th>
-        <th>Name</th>
+     <h1 className=" d-flex justify-content-center">Registered Users List</h1>
+     <div className=" d-flex justify-content-center">
+<table style={{ border: "2px solid red", borderCollapse: "collapse" }}>
+  <thead className="text-primary" style={{ border: "1px solid red" }}>
+    <tr>
+      <th style={{ border: "1px solid blue" }}>Sr.</th>
+      <th style={{ border: "1px solid blue" }}>Name</th>
+      <th style={{ border: "1px solid blue" }}>Phone</th>
+      <th style={{ border: "1px solid blue" }}>Email</th>
+      <th style={{ border: "1px solid blue" }}>UserName</th>
+    </tr>
+  </thead>
+  <tbody>
+    {usedata.map((user, index) => (
+      <tr key={index} style={{ border: "1px solid blue" }}>
+        <td style={{ border: "1px solid blue" }}>{index + 1}</td>
+        <td style={{ border: "1px solid blue" }}>{user.name}</td>
+        <td style={{ border: "1px solid blue" }}>{user.phone}</td>
+        <td style={{ border: "1px solid blue" }}>{user.email}</td>
+        <td style={{ border: "1px solid blue" }}>{user.username}</td>
+      </tr>
+    ))}
+  </tbody>
+</table></div>
 
-        <th>Phone</th>
-        <th>Email</th>
-        <th>UserName</th>
-      </thead>
-      {usedata.map((user) => (
-        <>
-          <tbody>
-            <tr>
-              <td>{count++}</td>
-              <td>{user.name}</td>
-              <td>{user.phone}</td>
-              <td>{user.email}</td>
-              <td>{user.username}</td>
-            </tr>
-          </tbody>
-        </>
-      ))}
+
+
+
     </>
   );
 }

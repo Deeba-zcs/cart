@@ -6,15 +6,17 @@ import Router, { useRouter } from "next/navigation";
 import Productpage from "../Product/page";
 
 
+
 function HomePage() {
   const currentUser = useSelector((state) => state.signup.currentUser);
+  const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
   console.log("cu",currentUser)
   const [userData, setUserData] = useState(null);
   const router=useRouter()
    useEffect(() => {
-    if (currentUser && currentUser.length > 0) {
+    if (isLoggedIn ) {
      
-      setUserData(currentUser[0]);
+      setUserData(currentUser);
     }
   }, [currentUser]);
   const clickUser = () => {

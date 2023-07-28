@@ -2,11 +2,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
+
+//import Card from "react-bootstrap/Card";
 
 import {increase, decrease,remove,persistCart} from "src/app/Store/registerslice.js";
 
-import { BiSolidMessageAltAdd, BiSolidMessageAltMinus } from "react-icons/bi";
+//import { BiSolidMessageAltAdd, BiSolidMessageAltMinus } from "react-icons/bi";
+
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,7 +16,8 @@ import "./addcart.css";
 
 function Cartpage() {
   const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
-  const cartProducts = useSelector((state) => state.signup.cartUser);
+  const currentUser = useSelector((state) => state.signup.currentUser);
+  const cartUser = isLoggedIn ? currentUser[0]?.cartItems || [] : [];
   console.log("isLoggedIn", isLoggedIn);
 
   const products = useSelector((state) => state.signup.cartUser);
@@ -22,31 +25,33 @@ function Cartpage() {
 
   const dispatch = useDispatch();
 
- 
   useEffect(() => {
-    
-    const cartData = JSON.parse(localStorage.getItem("reduxState"));
+    const cartData = JSON.parse(localStorage.getItem("cartState"));
     if (cartData) {
-      dispatch(persistCart(cartProducts));
+      dispatch(persistCart(cartData.cartUser));
     }
   }, [dispatch]);
 
 
   const removeItem = (id) => {
     dispatch(remove(id));
+    dispatch(updateUserCart({ userId: currentUser[0]?.id, cartItems: cartUser }));
   };
 
   const increaseQuantity = (id) => {
     dispatch(increase(id));
+    dispatch(updateUserCart({ userId: currentUser[0]?.id, cartItems: cartUser }));
   };
   const decreaseQuantity = (id) => {
     const productToDecrease = products.find((product) => product.id === id);
     if (productToDecrease) {
       if (productToDecrease.quantity > 1) {
         dispatch(decrease(id));
+       // dispatch(persistCart(cartProducts)); 
       } else {
     
         dispatch(deleteitem(id));
+       // dispatch(persistCart(cartProducts)); 
       }
     } else {
       alert("Product not found in the cart.");
@@ -122,6 +127,7 @@ function Cartpage() {
 
   return (
     <>
+    <div className='text-primary'><Link href="/Homepage">back to Dashboard</Link></div>
       <div className="container">
         {products.length === 0 ? (
           <>

@@ -18,7 +18,7 @@ const registerSlice = createSlice({
       state.isLoggedIn = false;
     },
     register: (state, action) => {
-      state.currentUser.push(action.payload);
+      state.currentUser=(action.payload);
       state.isLoggedIn = true;
       state.username = action.payload;
     },
@@ -34,7 +34,7 @@ const registerSlice = createSlice({
       } else {
         alert("This product is already in the cart.");
       }
-      localStorage.setItem("reduxState", JSON.stringify(state));
+      localStorage.setItem("cartState", JSON.stringify(state));
     },
     increase: (state, action) => {
       const productId = action.payload;
@@ -48,7 +48,7 @@ const registerSlice = createSlice({
       } else {
         alert("Product not found in the cart.");
       }
-      localStorage.setItem("reduxState", JSON.stringify(state));
+      localStorage.setItem("cartState", JSON.stringify(state));
     },
     decrease: (state, action) => {
       const productId = action.payload;
@@ -60,7 +60,7 @@ const registerSlice = createSlice({
         if (productToDecrease.quantity > 1) {
           productToDecrease.quantity -= 1;
         } else {
-          // If the quantity is 1 or less, remove the item from the cart
+       
           state.cartUser = state.cartUser.filter(
             (product) => product.id !== productId
           );
@@ -68,20 +68,34 @@ const registerSlice = createSlice({
       } else {
         alert("Product not found in the cart.");
       }
-      localStorage.setItem("reduxState", JSON.stringify(state));
+      localStorage.setItem("cartState", JSON.stringify(state));
     },
     remove: (state, action) => {
       const productId = action.payload;
       state.cartUser = state.cartUser.filter((product) => product.id !== productId);
-      localStorage.setItem("reduxState", JSON.stringify(state));
+      localStorage.setItem("cartState", JSON.stringify(state));
     },
     persistCart: (state, action) => {
       state.cartUser = action.payload;
     },
+    updateUserCart: (state, action) => {
+      const { userId, cartItems } = action.payload;
+      const userIndex = state.currentUser.findIndex((user) => user.id === userId);
+      
+      if (userIndex !== -1) {
+        state.currentUser[userIndex].cartItems = cartItems;
+      } else {
+      
+        state.currentUser.push({
+          id: userId,
+          cartItems,
+        });
+      }}
   },
 });
 
-export const { login, logout, register, add, increase, decrease, remove, persistCart} =
+export const { login, logout, register, add, increase, 
+  decrease, remove, persistCart,updateUserCart} =
   registerSlice.actions;
 
 export default registerSlice.reducer;

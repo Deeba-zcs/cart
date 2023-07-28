@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
   const pathName = usePathname();
   
  
-  const excludedPaths = ['/signin', '/Register'];
+  const excludedPaths = ["/",'/Register'];
 
   const showNavbar = !excludedPaths.includes(pathName);
 

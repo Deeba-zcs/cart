@@ -14,8 +14,9 @@ function Signin() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+
   useEffect(() => {
-    const userData = localStorage.getItem("userData");
+   const cartstate = localStorage.getItem("cartState");
   }, []);
 
   const handleSubmit = (e) => {
@@ -106,9 +107,9 @@ function Signin() {
                 </div>
               </div>
             </div>
-            <div className="text-center">
+            {/* <div className="text-center">
               <a href="/forgot-password">Forgot password?</a>
-            </div>
+            </div> */}
           </form>
         </div>
       </div>

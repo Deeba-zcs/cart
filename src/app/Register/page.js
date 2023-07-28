@@ -16,13 +16,13 @@ function page() {
   const [password, setPassword] = useState("");
   const [name,setName] = useState("");
   const [phone, setPhone] = useState("");
-  
+
   console.log("email", email);
 
-  const handleSubmitform = async (e) => {
+  const handleSubmitform =  (e) => {
     console.log("userData");
     e.preventDefault();
-    const usedata = (await JSON.parse(localStorage.getItem("userData"))) || [];
+    const usedata = ( JSON.parse(localStorage.getItem("userData"))) || [];
     const isUsernameTaken = usedata.some(
       (userData) => userData.username === username
     );
@@ -38,10 +38,10 @@ function page() {
     
 
    else{
-    const userData = { username, email, password,name,phone};
+    const userData = { username, email,password,name,phone};
      console.log("Arr",userData);
      usedata.push(userData);
-    
+   
     dispatch(register(userData));
     localStorage.setItem("userData", JSON.stringify(usedata));}
     alert("You have been successfully registered now you may login");
