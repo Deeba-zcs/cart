@@ -16,7 +16,7 @@ function page() {
   const [password, setPassword] = useState("");
   const [name,setName] = useState("");
   const [phone, setPhone] = useState("");
-
+  const [uid, setid] = useState(1);
   console.log("email", email);
 
   const handleSubmitform =  (e) => {
@@ -38,7 +38,8 @@ function page() {
     
 
    else{
-    const userData = {username, email,password,name,phone};
+    ;
+    const userData = {  id: Math.floor(Math.random(0,100)*100).toString(),username, email,password,name,phone};
      console.log("Arr",userData,);
      usedata.push(userData);
    

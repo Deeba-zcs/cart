@@ -1,14 +1,8 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
-
-//import Card from "react-bootstrap/Card";
-
-import {increase, decrease,remove,persistCart} from "src/app/Store/registerslice.js";
-
-//import { BiSolidMessageAltAdd, BiSolidMessageAltMinus } from "react-icons/bi";
-
+import {remove} from "src/app/Store/registerslice.js";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -17,41 +11,65 @@ import "./addcart.css";
 function Cartpage() {
   const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
   const currentUser = useSelector((state) => state.signup.currentUser);
-  const cartUser = isLoggedIn ? currentUser[0]?.cartItems || [] : [];
-  console.log("isLoggedIn", isLoggedIn);
+ console.log("cartitem",currentUser)
+  const [cartitem,setCartItems]=useState([])
+ 
 
   const products = useSelector((state) => state.signup.cartUser);
   console.log("Cartdisplay", products);
 
   const dispatch = useDispatch();
 
-  
-
-
+  useEffect(() => {
+    const carts = products.filter((item) => item.id === currentUser.id);
+    setCartItems(carts);
+  }, []);
+  // useEffect(() => {
+  //   products.map((d) => {
+  //     console.log("cartUser.userid", d.id);
+  //     console.log("loggedIn.id", currentUser.id);
+  //     if (d.id === currentUser.id) {
+  //       const carts =products.filter((item) => item.id === currentUser.id);
+  //       setCartItems(carts);
+     
+     
+  //     }
+  //   });
+  // }, []);
+  console.log("r44r",cartitem);
   const removeItem = (id) => {
     dispatch(remove(id));
-    dispatch(updateUserCart({ userId: currentUser[0]?.id, cartItems: cartUser }));
+   
   };
 
-  const increaseQuantity = (id) => {
-    dispatch(increase(id));
-    dispatch(updateUserCart({ userId: currentUser[0]?.id, cartItems: cartUser }));
-  };
-  const decreaseQuantity = (id) => {
-    const productToDecrease = products.find((product) => product.id === id);
-    if (productToDecrease) {
-      if (productToDecrease.quantity > 1) {
-        dispatch(decrease(id));
-       // dispatch(persistCart(cartProducts)); 
-      } else {
+//   const increaseQuantity = (id) => {
+//       dispatch(increase(id));
+ 
+//  setCartItems((previouscart)=>previouscart.map((product) =>
+//  product.id === id ? { ...product, quantity: product.quantity + 1 } : product
+// ))
+   
+  
+//   };
+//   const decreaseQuantity = (id) => {
+  
+//     const productToDecrease = products.find((product) => product.id === id);
+//     setCartItems((previouscart)=>previouscart.map((product) =>{
+//     if (productToDecrease) {
+//       if (productToDecrease.quantity > 1) {
+//         dispatch(decrease(id));
     
-        dispatch(deleteitem(id));
-       // dispatch(persistCart(cartProducts)); 
-      }
-    } else {
-      alert("Product not found in the cart.");
-    }
-  };
+//       } else {
+    
+//         dispatch(deleteitem(id));
+   
+//       }
+//     } else {
+//       alert("Product not found in the cart.");
+//     }
+   
+//    } ))
+//   };
 
  
   const router = useRouter();
@@ -64,7 +82,7 @@ function Cartpage() {
     }
   };
 
-  const cardss = products.map((product) => (
+  const cardss = cartitem.map((product) => (
    
     <div className="row">
       <div className="col-md-8 cart">
@@ -75,9 +93,9 @@ function Cartpage() {
             </div>
             <div className="col">
               <div className="row text-muted">{product.title}</div>
-              <div className="row">INR: {product.price}/-</div>
+              <div className="row">INR:{product.price}/-</div>
             </div>
-            <div className="col me-4">
+            {/* <div className="col me-4">
               <div className="col me-4">
                 <a href="#" className="border">
                   {product.quantity}
@@ -89,12 +107,12 @@ function Cartpage() {
                   -
                 </a>
               </div>
-            </div>
+            </div> */}
             <div className="col-4">
               <div className="row">
-                <div className="col">
+                {/* <div className="col">
                   <span> INR:{(product.price * product.quantity).toFixed(2)}; </span>
-                </div>
+                </div> */}
                 <div className="col-1">
                 <Button className="bg-primary"style={{width:"80px"}} onClick={() => removeItem(product.id)}>
                   Remove
@@ -131,7 +149,7 @@ function Cartpage() {
               <p>
                 This cart is empty please go through this button{" "}
                 <a
-                  href="/Product"
+                  href="/Homepage"
                   role="button"
                   className="btn btn-secondary popover-test"
                   title="Popover title"

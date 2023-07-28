@@ -9,15 +9,15 @@ import { logout } from "src/app/Store/registerslice.js"; // Import the logout ac
 import React, { useEffect ,useState} from "react";
 function Navbarpage() {
   const cartProducts = useSelector((state) => state.signup.cartUser);
-  console.log("carproduct nav",cartProducts.length)
+  console.log("carproduct nav",cartProducts)
   const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
   const username = useSelector((state) => state.signup.username);
   const router=useRouter()
   const dispatch = useDispatch();
-  // const [cartLength, setCartLength] = useState();
-  // useEffect(() => {
-  //   setCartLength(cartProducts.length);
-  // }, [cartProducts]);
+  const [cartLength, setCartLength] = useState();
+  useEffect(() => {
+    setCartLength(cartProducts.quantity);
+  }, [cartProducts]);
   const handleLogout = () => {
     dispatch(logout());
    router.push("/signin")
@@ -58,7 +58,7 @@ function Navbarpage() {
               </Navbar.Text>
               <Navbar.Text>
                 <Link href="/Cart" passHref className="text-white text-decoration-none">
-                  <BsFillCartPlusFill size={24} /> <sup>{cartProducts.length}</sup>{" "}
+                  <BsFillCartPlusFill size={24} /> <sup>{cartLength}</sup>{" "}
                 </Link>
               </Navbar.Text>
             </Navbar.Collapse>

@@ -9,16 +9,25 @@ import Productpage from "../Product/page";
 
 function HomePage() {
   const currentUser = useSelector((state) => state.signup.currentUser);
+
   const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
   console.log("cu",currentUser)
   const [userData, setUserData] = useState(null);
   const router=useRouter()
    useEffect(() => {
+    const savedUserData = localStorage.getItem("userData");
+    console.log("savedusr",savedUserData)
+    const registeredUsers = savedUserData ? JSON.parse(savedUserData) : [];
+    const userExists = registeredUsers.find(
+      (user) => user.username === currentUser.username
+    );
+    console.log("userexist",userExists)
     if (isLoggedIn ) {
      
-      setUserData(currentUser);
+      setUserData(userExists);
     }
-  }, [currentUser]);
+  }, []);
+
   const clickUser = () => {
     router.push("/RegisteredUser");
   };
@@ -34,7 +43,7 @@ function HomePage() {
             <p>Email: {userData.email}</p>
             <p>Phone: {userData.phone}</p>
             <p>Name: {userData.name}</p>
-            <p>Phone: {userData.password}</p>
+            <p>ID: {userData.id}</p>
           </div>)}
         {/* ) : (
           <p>Please log in to view your details.</p>

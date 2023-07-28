@@ -3,42 +3,47 @@ import "./signin.css";
 
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "src/app/Store/registerslice.js";
+import { login ,setUserId} from "src/app/Store/registerslice.js";
 import React, { useState ,useEffect} from "react";
-//import Cart from "../Cart/page";
+
 
 import { useRouter } from "next/navigation";
 function Signin() {
   const [username, setUsername] = useState("");
+  const currentUser=useSelector((state)=>state.signup.currentUser);
   const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
   const router = useRouter();
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
+   
    const cartstate = localStorage.getItem("cartState");
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const userData = { username, password };
+   
 
     const savedUserData = localStorage.getItem("userData");
     //const cartData = localStorage.getItem("Addtocart");
     const registeredUsers = savedUserData ? JSON.parse(savedUserData) : [];
-    const userExists = registeredUsers.some(
+    const userExists = registeredUsers.find(
       (user) => user.username === username
     );
-
+        console.log("userExist",userExists)
     if (!userExists) {
       alert("User is not registered.");
       setUsername("");
       setPassword("");
       return;
     }
-
+    const userData = { username, password,id:userExists.id };
     dispatch(login(userData));
+    //const userId = registeredUsers.find((user) => user.username === username)?.id;
+    //console.log("uid",userId);
+  //  dispatch(setUserId(userId));
   };
    if (isLoggedIn) {
      router.push("/Homepage");

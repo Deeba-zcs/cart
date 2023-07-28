@@ -6,6 +6,7 @@ const registerSlice = createSlice({
     currentUser: [],
     isLoggedIn: false,
     cartUser: [],
+
   },
   reducers: {
     login: (state, action) => {
@@ -22,20 +23,22 @@ const registerSlice = createSlice({
       state.isLoggedIn = true;
       state.username = action.payload;
     },
+    // setUserId: (state, action) => {
+    //   state.userId = action.payload;
+    // },
     add: (state, action) => {
       state.isLoggedIn = true;
       const productToAdd = action.payload;
       console.log("productoadd",productToAdd)
-      const existingProduct = state.cartUser.find(
-        (product) => product.id === productToAdd.id
-      );
+      // const existingProduct = state.cartUser.find(
+      //   (product) => product.id === productToAdd.id
+      // );
 
-      if (!existingProduct) {
-        productToAdd.quantity = 1;
-        state.cartUser.push(productToAdd); 
-      } else {
-        alert("This product is already in the cart.");
-      }
+     
+       productToAdd.quantity = 1;
+         state.cartUser.push(productToAdd); 
+      // } else {
+   
       localStorage.setItem("cartState", JSON.stringify(state));
     },
     increase: (state, action) => {
@@ -78,24 +81,12 @@ const registerSlice = createSlice({
       localStorage.setItem("cartState", JSON.stringify(state));
     },
   
-    updateUserCart: (state, action) => {
-      const { userId, cartItems } = action.payload;
-      const userIndex = state.currentUser.findIndex((user) => user.id === userId);
-      
-      if (userIndex !== -1) {
-        state.currentUser[userIndex].cartItems = cartItems;
-      } else {
-      
-        state.currentUser.push({
-          id: userId,
-          cartItems,
-        });
-      }}
+  
   },
 });
 
 export const { login, logout, register, add, increase, 
-  decrease, remove, persistCart,updateUserCart} =
+  decrease, remove} =
   registerSlice.actions;
 
 export default registerSlice.reducer;
