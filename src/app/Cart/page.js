@@ -25,12 +25,7 @@ function Cartpage() {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const cartData = JSON.parse(localStorage.getItem("cartState"));
-    if (cartData) {
-      dispatch(persistCart(cartData.cartUser));
-    }
-  }, [dispatch]);
+  
 
 
   const removeItem = (id) => {

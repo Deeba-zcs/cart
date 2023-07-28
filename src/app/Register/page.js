@@ -38,11 +38,12 @@ function page() {
     
 
    else{
-    const userData = { username, email,password,name,phone};
-     console.log("Arr",userData);
+    const userData = {username, email,password,name,phone};
+     console.log("Arr",userData,);
      usedata.push(userData);
    
     dispatch(register(userData));
+
     localStorage.setItem("userData", JSON.stringify(usedata));}
     alert("You have been successfully registered now you may login");
     setUsername("");

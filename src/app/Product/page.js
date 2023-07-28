@@ -19,10 +19,12 @@ import Link from "next/link";
      .then(data=>data.json())
      .then(result=>setItem(result))
     },[])
-
+    console.log("item",items);
     const addtocart = (product) => {
-        dispatch(add(product)); // Dispatch the 'add' action with the selected product
-        localStorage.setItem('Addtocart',JSON.stringify(product))
+      console.log("adt",product)
+        dispatch(add(product)); 
+
+        localStorage.setItem('cartState',JSON.stringify(product))
       };
  console.log("item",items);
 

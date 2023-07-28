@@ -23,7 +23,9 @@ const registerSlice = createSlice({
       state.username = action.payload;
     },
     add: (state, action) => {
+      state.isLoggedIn = true;
       const productToAdd = action.payload;
+      console.log("productoadd",productToAdd)
       const existingProduct = state.cartUser.find(
         (product) => product.id === productToAdd.id
       );
@@ -75,9 +77,7 @@ const registerSlice = createSlice({
       state.cartUser = state.cartUser.filter((product) => product.id !== productId);
       localStorage.setItem("cartState", JSON.stringify(state));
     },
-    persistCart: (state, action) => {
-      state.cartUser = action.payload;
-    },
+  
     updateUserCart: (state, action) => {
       const { userId, cartItems } = action.payload;
       const userIndex = state.currentUser.findIndex((user) => user.id === userId);
