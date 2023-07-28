@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 
-import {increase, decrease,deleteitem } from "src/app/Store/registerslice.js";
+import {increase, decrease,remove,persistCart} from "src/app/Store/registerslice.js";
 
 import { BiSolidMessageAltAdd, BiSolidMessageAltMinus } from "react-icons/bi";
 import Link from "next/link";
@@ -14,6 +14,7 @@ import "./addcart.css";
 
 function Cartpage() {
   const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
+  const cartProducts = useSelector((state) => state.signup.cartUser);
   console.log("isLoggedIn", isLoggedIn);
 
   const products = useSelector((state) => state.signup.cartUser);
@@ -21,29 +22,38 @@ function Cartpage() {
 
   const dispatch = useDispatch();
 
+ 
   useEffect(() => {
-    const cartData = localStorage.getItem("Addtocart");
-  }, []);
+    
+    const cartData = JSON.parse(localStorage.getItem("reduxState"));
+    if (cartData) {
+      dispatch(persistCart(cartProducts));
+    }
+  }, [dispatch]);
 
-  const removetocart = (id) => {
-    dispatch(deleteitem(id));
+
+  const removeItem = (id) => {
+    dispatch(remove(id));
   };
-
 
   const increaseQuantity = (id) => {
     dispatch(increase(id));
   };
-
   const decreaseQuantity = (id) => {
-    const product = products.find((item) => item.id === id);
-  
-    if (product.quantity === 1) {
-      dispatch(deleteitem(id)); // Dispatching deleteitem action if quantity is 1
+    const productToDecrease = products.find((product) => product.id === id);
+    if (productToDecrease) {
+      if (productToDecrease.quantity > 1) {
+        dispatch(decrease(id));
+      } else {
+    
+        dispatch(deleteitem(id));
+      }
     } else {
-      dispatch(decrease(id)); // Dispatching decrease action if quantity is greater than 1
+      alert("Product not found in the cart.");
     }
   };
 
+ 
   const router = useRouter();
 
   const gotopayment = () => {
@@ -56,7 +66,7 @@ function Cartpage() {
 
   const cardss = products.map((product) => (
    
-    <div className="row mt-5">
+    <div className="row">
       <div className="col-md-8 cart">
         <div className="row border-top border-bottom">
           <div className="row main align-items-center">
@@ -68,11 +78,17 @@ function Cartpage() {
               <div className="row">INR: {product.price}/-</div>
             </div>
             <div className="col me-4">
-            <div className="col me-4">
-                        <a href="#" onClick={() => decreaseQuantity(product.id)}>-</a>
-                        <a href="#" className="border">{product.quantity}</a>
-                        <a href="#" onClick={() => increaseQuantity(product.id)}>+</a>
-                    </div>
+              <div className="col me-4">
+                <a href="#" className="border">
+                  {product.quantity}
+                </a>
+                <a href="#" onClick={() => increaseQuantity(product.id)}>
+                  +
+                </a>
+                <a href="#" onClick={() => decreaseQuantity(product.id)}>
+                  -
+                </a>
+              </div>
             </div>
             <div className="col-4">
               <div className="row">
@@ -80,8 +96,9 @@ function Cartpage() {
                   <span> INR:{(product.price * product.quantity).toFixed(2)}; </span>
                 </div>
                 <div className="col-1">
-                    <button className="w-1 bg-danger"  onClick={() => removetocart(product.id)}>
-                    remove</button></div>
+                <Button className="bg-primary"style={{width:"80px"}} onClick={() => removeItem(product.id)}>
+                  Remove
+                </Button></div>
                     </div>
               
               

@@ -30,10 +30,11 @@ const registerSlice = createSlice({
 
       if (!existingProduct) {
         productToAdd.quantity = 1;
-        state.cartUser.push(productToAdd); // Add the selected product to the cartUser array
+        state.cartUser.push(productToAdd); 
       } else {
         alert("This product is already in the cart.");
       }
+      localStorage.setItem("reduxState", JSON.stringify(state));
     },
     increase: (state, action) => {
       const productId = action.payload;
@@ -47,23 +48,40 @@ const registerSlice = createSlice({
       } else {
         alert("Product not found in the cart.");
       }
+      localStorage.setItem("reduxState", JSON.stringify(state));
     },
-    decrease(state, action) {
-        const productId = action.payload;
-        const existingProduct = state.find((item) => item.id === productId);
-        if (existingProduct) {
-          if (existingProduct.quantity > 0) {
-            existingProduct.quantity -= 1;
-          }
+    decrease: (state, action) => {
+      const productId = action.payload;
+      const productToDecrease = state.cartUser.find(
+        (product) => product.id === productId
+      );
+
+      if (productToDecrease) {
+        if (productToDecrease.quantity > 1) {
+          productToDecrease.quantity -= 1;
+        } else {
+          // If the quantity is 1 or less, remove the item from the cart
+          state.cartUser = state.cartUser.filter(
+            (product) => product.id !== productId
+          );
         }
-      },
-      deleteitem(state, action) {
-        return state.filter((item) => item.id !== action.payload);
-      },
+      } else {
+        alert("Product not found in the cart.");
+      }
+      localStorage.setItem("reduxState", JSON.stringify(state));
+    },
+    remove: (state, action) => {
+      const productId = action.payload;
+      state.cartUser = state.cartUser.filter((product) => product.id !== productId);
+      localStorage.setItem("reduxState", JSON.stringify(state));
+    },
+    persistCart: (state, action) => {
+      state.cartUser = action.payload;
+    },
   },
 });
 
-export const { login, logout, register, add, increase, decrease, deleteitem } =
+export const { login, logout, register, add, increase, decrease, remove, persistCart} =
   registerSlice.actions;
 
 export default registerSlice.reducer;

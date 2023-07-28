@@ -23,6 +23,20 @@ function Signin() {
 
     const userData = { username, password };
 
+    const savedUserData = localStorage.getItem("userData");
+    //const cartData = localStorage.getItem("Addtocart");
+    const registeredUsers = savedUserData ? JSON.parse(savedUserData) : [];
+    const userExists = registeredUsers.some(
+      (user) => user.username === username
+    );
+
+    if (!userExists) {
+      alert("User is not registered.");
+      setUsername("");
+      setPassword("");
+      return;
+    }
+
     dispatch(login(userData));
   };
    if (isLoggedIn) {
