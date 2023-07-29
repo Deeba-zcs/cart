@@ -7,22 +7,42 @@ import { BsFillCartPlusFill } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { logout } from "src/app/Store/registerslice.js"; // Import the logout action
 import React, { useEffect ,useState} from "react";
+
 function Navbarpage() {
-  const cartProducts = useSelector((state) => state.signup.cartUser);
-  console.log("carproduct nav",cartProducts)
+
+  
+
   const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
   const username = useSelector((state) => state.signup.username);
   const router=useRouter()
   const dispatch = useDispatch();
-  const [cartLength, setCartLength] = useState();
-  useEffect(() => {
-    setCartLength(cartProducts.quantity);
-  }, [cartProducts]);
-  const handleLogout = () => {
-    dispatch(logout());
-   router.push("/signin")
-  };
 
+  const [cartLength, setCartLength] = useState(0);
+ 
+  const handleLogout = () => {
+  
+    dispatch(logout());
+
+    router.push("/");
+  };
+  // useEffect(()=>{
+  //   const cartItems=localStorage.getItem("cartState");
+  //   console.log("cartIem",cartItems)
+  //   console.log("Username:", username);
+  //   if(cartItems){
+  //     const parsedCartItems=JSON.parse(cartItems);
+  //     const userCartItems=parsedCartItems[username?.id]||[];
+  //    setCartLength(userCartItems.length)
+  //    console.log("userCartItems",userCartItems.length)
+  //   }
+  // },[]);
+  
+  useEffect(() => {
+    const cartItems = JSON.parse(localStorage.getItem("cartState")) || {};
+    const userCartItems = cartItems[username?.id] || [];
+    setCartLength(userCartItems.length);
+  }, []);
+  console.log("userCartItemsstate",cartLength)
   return (
     <>
       <Navbar bg="primary" data-bs-theme="dark">
@@ -35,7 +55,7 @@ function Navbarpage() {
 
               <Navbar.Text>
                 <Link href="/Cart" passHref className="text-white text-decoration-none">
-                  <BsFillCartPlusFill size={24} /> <sup>{cartProducts.length}</sup>{" "}
+                  <BsFillCartPlusFill size={24} /> <sup>{cartLength}</sup>{" "}
                 </Link>
               </Navbar.Text>
               <Navbar.Text className="text-white">
@@ -58,7 +78,7 @@ function Navbarpage() {
               </Navbar.Text>
               <Navbar.Text>
                 <Link href="/Cart" passHref className="text-white text-decoration-none">
-                  <BsFillCartPlusFill size={24} /> <sup>{cartLength}</sup>{" "}
+                <BsFillCartPlusFill size={24} /> <sup>{0}</sup>{" "}
                 </Link>
               </Navbar.Text>
             </Navbar.Collapse>

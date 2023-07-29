@@ -5,8 +5,8 @@ const registerSlice = createSlice({
   initialState: {
     currentUser: [],
     isLoggedIn: false,
-    cartUser: [],
-
+    cart: JSON.parse(localStorage.getItem("cart_items")) || [],
+    uid: null,
   },
   reducers: {
     login: (state, action) => {
@@ -14,79 +14,50 @@ const registerSlice = createSlice({
       console.log("signin", state.currentUser);
       state.isLoggedIn = true;
       state.username = action.payload;
+      state.uid = action.payload.id; 
     },
-    logout: (state) => {
-      state.isLoggedIn = false;
-    },
+    
     register: (state, action) => {
       state.currentUser=(action.payload);
       state.isLoggedIn = true;
       state.username = action.payload;
+      state.uid = action.payload.id; 
     },
-    // setUserId: (state, action) => {
-    //   state.userId = action.payload;
-    // },
-    add: (state, action) => {
-      state.isLoggedIn = true;
-      const productToAdd = action.payload;
-      console.log("productoadd",productToAdd)
-      // const existingProduct = state.cartUser.find(
-      //   (product) => product.id === productToAdd.id
-      // );
-
-     
-       productToAdd.quantity = 1;
-         state.cartUser.push(productToAdd); 
-      // } else {
-   
-      localStorage.setItem("cartState", JSON.stringify(state));
+    logout: (state) => {
+      state.currentUser = [];
+      state.isLoggedIn = false;
+      state.username = null;
     },
-    increase: (state, action) => {
-      const productId = action.payload;
-      const productToIncrease = state.cartUser.find(
-        (product) => product.id === productId
-      );
-
-      if (productToIncrease) {
+    addToCart: (state, action) => {
       
-        productToIncrease.quantity += 1;
-      } else {
-        alert("Product not found in the cart.");
-      }
-      localStorage.setItem("cartState", JSON.stringify(state));
-    },
-    decrease: (state, action) => {
-      const productId = action.payload;
-      const productToDecrease = state.cartUser.find(
-        (product) => product.id === productId
-      );
+      state.cart.push(action.payload);
 
-      if (productToDecrease) {
-        if (productToDecrease.quantity > 1) {
-          productToDecrease.quantity -= 1;
-        } else {
-       
-          state.cartUser = state.cartUser.filter(
-            (product) => product.id !== productId
-          );
-        }
-      } else {
-        alert("Product not found in the cart.");
+      localStorage.setItem(state.uid, JSON.stringify(state.cart));  // Save cart items to Local Storage with the username as the key
+    },
+   increaseQuantity: (state, action) => {
+      const productId = action.payload.id;
+      if (state.cart[productId]) {
+        state.cart[productId].quantity += 1;
+        localStorage.setItem("cart_items", JSON.stringify(state.cart));
       }
-      localStorage.setItem("cartState", JSON.stringify(state));
     },
-    remove: (state, action) => {
-      const productId = action.payload;
-      state.cartUser = state.cartUser.filter((product) => product.id !== productId);
-      localStorage.setItem("cartState", JSON.stringify(state));
+    decreaseQuantity: (state, action) => {
+      const productId = action.payload.id;
+      if (state.cart[productId] && state.cart[productId].quantity > 0) {
+        state.cart[productId].quantity -= 1;
+        localStorage.setItem("cart_items", JSON.stringify(state.cart));
+      }
     },
-  
-  
+    removeItem: (state, action) => {
+      const productId = action.payload.id;
+      if (state.cart[productId]) {
+        delete state.cart[productId];
+        localStorage.setItem("cart_items", JSON.stringify(state.cart));
+      }
+    },
   },
 });
 
-export const { login, logout, register, add, increase, 
-  decrease, remove} =
-  registerSlice.actions;
+export const { login, logout, register,addToCart  } =registerSlice.actions;
 
 export default registerSlice.reducer;

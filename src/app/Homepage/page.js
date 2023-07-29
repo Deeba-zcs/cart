@@ -31,7 +31,7 @@ function HomePage() {
   const clickUser = () => {
     router.push("/RegisteredUser");
   };
-  console.log("userdataa",userData)
+ // console.log("userdataa",userData)
   return (
     <>
       <div>
