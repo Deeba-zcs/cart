@@ -20,12 +20,14 @@ console.log("state.subitem",subitem)
 
   useEffect(() => {
     const cartItems = JSON.parse(localStorage.getItem("cartState")) || {};
+    console.log("cartitemss",cartItems.subitem)
     const userCartItems = cartItems[username?.id] || [];
+
     setCartLength(userCartItems.length);
   }, []);
 
  
- 
+ console.log("nvlen",cartLength)
   const handleLogout = () => {
   
     dispatch(logout());

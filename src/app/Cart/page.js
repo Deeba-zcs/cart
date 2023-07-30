@@ -27,7 +27,7 @@ function Cartpage() {
     console.log("firstincreasequatity",item.quantity)
     console.log("firstincreasequatityid",item.id)
     // Dispatch the action to increase the quantity of the item in the Redux store
-    dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }));
+    dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1,subitem:subitem+1 }));
 
     // Update the quantity of the item in the local state and local storage
     const updatedCartItems = userCartItems.map((cartItem) =>
@@ -41,7 +41,7 @@ console.log("updatedCartItems",updatedCartItems)
   const handleDecreaseQuantity = (item,subitem) => {
     if (item.quantity > 1) {
       // Dispatch the action to decrease the quantity of the item in the Redux store
-      dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }));
+      dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1,subitem:subitem-1 }));
 
       // Update the quantity of the item in the local state and local storage
       const updatedCartItems = userCartItems.map((cartItem) =>
