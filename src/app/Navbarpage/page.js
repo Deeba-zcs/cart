@@ -10,14 +10,21 @@ import React, { useEffect ,useState} from "react";
 
 function Navbarpage() {
 
-  
-
-  const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
+ const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
   const username = useSelector((state) => state.signup.username);
+const subitem=useSelector((state)=>state.signup.subitem);
+console.log("state.subitem",subitem)
   const router=useRouter()
   const dispatch = useDispatch();
-
   const [cartLength, setCartLength] = useState(0);
+
+  useEffect(() => {
+    const cartItems = JSON.parse(localStorage.getItem("cartState")) || {};
+    const userCartItems = cartItems[username?.id] || [];
+    setCartLength(userCartItems.length);
+  }, []);
+
+ 
  
   const handleLogout = () => {
   
@@ -25,23 +32,9 @@ function Navbarpage() {
 
     router.push("/");
   };
-  // useEffect(()=>{
-  //   const cartItems=localStorage.getItem("cartState");
-  //   console.log("cartIem",cartItems)
-  //   console.log("Username:", username);
-  //   if(cartItems){
-  //     const parsedCartItems=JSON.parse(cartItems);
-  //     const userCartItems=parsedCartItems[username?.id]||[];
-  //    setCartLength(userCartItems.length)
-  //    console.log("userCartItems",userCartItems.length)
-  //   }
-  // },[]);
+ 
   
-  useEffect(() => {
-    const cartItems = JSON.parse(localStorage.getItem("cartState")) || {};
-    const userCartItems = cartItems[username?.id] || [];
-    setCartLength(userCartItems.length);
-  }, []);
+ 
   console.log("userCartItemsstate",cartLength)
   return (
     <>

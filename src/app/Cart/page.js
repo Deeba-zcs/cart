@@ -5,7 +5,7 @@ import {Button } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 import {
- 
+  updateQuantity,
   removeItem,
 } from "src/app/Store/registerslice.js";
 
@@ -16,14 +16,42 @@ function Cartpage() {
   const [userCartItems, setUserCartItems] = useState(cartItems[currentUser.id] || []);
   console.log(userCartItems);
   const dispatch = useDispatch();
-  const handleIncreaseQuantity = (item) => {
-    dispatch(increaseQuantity(item));
+
+  const updateLocalStorageCartItems = (cartItems) => {
+    const existingCartItems = JSON.parse(localStorage.getItem("cartState")) || {};
+    existingCartItems[currentUser.id] = cartItems;
+    localStorage.setItem("cartState", JSON.stringify(existingCartItems));
+  };
+  const handleIncreaseQuantity = (item,subitem) => {
+    console.log("firstincrease",item)
+    console.log("firstincreasequatity",item.quantity)
+    console.log("firstincreasequatityid",item.id)
+    // Dispatch the action to increase the quantity of the item in the Redux store
+    dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1,subitem:subitem + 1 }));
+
+    // Update the quantity of the item in the local state and local storage
+    const updatedCartItems = userCartItems.map((cartItem) =>
+      cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+    );
+console.log("updatedCartItems",updatedCartItems)
+    setUserCartItems(updatedCartItems);
+    updateLocalStorageCartItems(updatedCartItems);
   };
 
-  const handleDecreaseQuantity = (item) => {
-    dispatch(decreaseQuantity(item));
-  };
+  const handleDecreaseQuantity = (item,subitem) => {
+    if (item.quantity > 1) {
+      // Dispatch the action to decrease the quantity of the item in the Redux store
+      dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1,subitem:subitem - 1}));
 
+      // Update the quantity of the item in the local state and local storage
+      const updatedCartItems = userCartItems.map((cartItem) =>
+        cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
+      );
+
+      setUserCartItems(updatedCartItems);
+      updateLocalStorageCartItems(updatedCartItems);
+    }
+  };
   const handleRemoveItem = (item) => {
     // Dispatch the action to remove the item from the Redux store
     dispatch(removeItem(item));
@@ -88,10 +116,10 @@ const gotopayment = () => {
                 <a href="#" className="border mx-2">
                   {item.quantity}
                 </a>
-                <a className="mx-2"href="#" onClick={() => handleIncreaseQuantity(item)}>
+                <a className="mx-2"href="#" onClick={() => handleIncreaseQuantity(item,subitem)}>
                   +
                 </a>
-                <a  className="mx-2" href="#" onClick={() =>handleDecreaseQuantity(item)}>
+                <a  className="mx-2" href="#" onClick={() =>handleDecreaseQuantity(item,subitem)}>
                   -
                 </a>
               </div>

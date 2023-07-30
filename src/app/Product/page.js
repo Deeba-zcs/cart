@@ -6,7 +6,7 @@ import { Card, Button } from "react-bootstrap";
 function Productpage() {
   const currentUser = useSelector((state) => state.signup.currentUser);
   const dispatch = useDispatch();
-  const [username, setUsername] = useState("");
+
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -16,25 +16,33 @@ function Productpage() {
       .then((result) => setItems(result));
   }, []);
 
-  useEffect(() => {
-    // Get the username from the currentUser and set it to the state
-    setUsername(currentUser.username);
-  }, [currentUser]);
+  
 
   const addToCartHandler = (product) => {
-   
+  
     dispatch(addToCart(product));
-
+  
    
     const existingCartItems = localStorage.getItem("cartState");
     const cartItems = existingCartItems ? JSON.parse(existingCartItems) : {};
-
+  
    
-    cartItems[currentUser.id] = cartItems[currentUser.id] || [];
-    cartItems[currentUser.id].push(product);
-
-   
-    localStorage.setItem("cartState", JSON.stringify(cartItems));
+    const userCart = cartItems[currentUser.id] || [];
+  
+    
+    const productExists = userCart.some((item) => item.id === product.id);
+  
+    if (productExists) {
+      
+      alert("Product is already in the cart!");
+    } else {
+      product.quantity = 1;
+      userCart.push(product);
+  
+    
+      cartItems[currentUser.id] = userCart;
+      localStorage.setItem("cartState", JSON.stringify(cartItems));
+    }
   };
 
   const cards = items.slice(0, 10).map((product) => (

@@ -6,7 +6,7 @@ const registerSlice = createSlice({
     currentUser: [],
     isLoggedIn: false,
     cart: JSON.parse(localStorage.getItem("cart_items")) || [],
-   
+    subitem: 0,
     username: null, // Add username to the initial state
     uid: null, // Add uid to the initial state
   },
@@ -37,12 +37,28 @@ const registerSlice = createSlice({
     },
    
     removeItem: (state, action) => {
+    
       const product = action.payload;
-    }
+    
+    },
+    updateQuantity: (state, action) => {
+      const { id, quantity,subitem } = action.payload;
+      console.log("id,quatity,subitem",id,quantity,subitem)
+      const existingCartItem = state.cart.find((item) => item.id === id);
 
+      if (existingCartItem) {
+        existingCartItem.quantity = quantity;
+  
+         // Calculate the subitem (total number of items in the cart) after updating the quantity
+    const subitem = state.cart.reduce((total, item) => total + item.quantity, 0);
+
+    state.subitem = subitem; // Update the subitem in the state
+    localStorage.setItem("cartState", JSON.stringify(state.cart));
+        
+    }},
   },
 });
 
-export const { login, logout, register,addToCart, removeItem  } =registerSlice.actions;
+export const { login, logout, register,addToCart, removeItem , updateQuantity } =registerSlice.actions;
 
 export default registerSlice.reducer;
