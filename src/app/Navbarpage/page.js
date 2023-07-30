@@ -12,7 +12,7 @@ function Navbarpage() {
 
  const isLoggedIn = useSelector((state) => state.signup.isLoggedIn);
   const username = useSelector((state) => state.signup.username);
-const subitem=useSelector((state)=>state.signup.subitem);
+  const subitem = useSelector((state) => state.signup.subitem);
 console.log("state.subitem",subitem)
   const router=useRouter()
   const dispatch = useDispatch();

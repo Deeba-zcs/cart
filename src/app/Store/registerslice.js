@@ -44,18 +44,21 @@ const registerSlice = createSlice({
     updateQuantity: (state, action) => {
       const { id, quantity,subitem } = action.payload;
       console.log("id,quatity,subitem",id,quantity,subitem)
-      const existingCartItem = state.cart.find((item) => item.id === id);
+      // const existingCartItem = state.cart.find((item) => item.id === id);
 
-      if (existingCartItem) {
-        existingCartItem.quantity = quantity;
+      // if (existingCartItem) {
+      //   existingCartItem.quantity = quantity;
   
-         // Calculate the subitem (total number of items in the cart) after updating the quantity
-    const subitem = state.cart.reduce((total, item) => total + item.quantity, 0);
-
-    state.subitem = subitem; // Update the subitem in the state
+      //    // Calculate the subitem (total number of items in the cart) after updating the quantity
+      //    const cartItems = JSON.parse(localStorage.getItem("cartState")) || {};
+      //    const userCartItems = cartItems[state.username?.id] || [];
+      //    const subitem = userCartItems.reduce((total, item) => total + item.quantity, 0);
+      //    console.log("suitemregister",subitem)
+         state.subitem = subitem; // Update the subitem in the state
+   
     localStorage.setItem("cartState", JSON.stringify(state.cart));
         
-    }},
+    },
   },
 });
 
