@@ -22,18 +22,18 @@ function Productpage() {
   }, [currentUser]);
 
   const addToCartHandler = (product) => {
-    // Dispatch the addToCart action with the product
+   
     dispatch(addToCart(product));
 
-    // Get the existing cart items from localStorage (if any)
+   
     const existingCartItems = localStorage.getItem("cartState");
     const cartItems = existingCartItems ? JSON.parse(existingCartItems) : {};
 
-    // Save the cart item with the user's login ID as the key in localStorage
+   
     cartItems[currentUser.id] = cartItems[currentUser.id] || [];
     cartItems[currentUser.id].push(product);
 
-    // Save the updated cartItems object to localStorage
+   
     localStorage.setItem("cartState", JSON.stringify(cartItems));
   };
 

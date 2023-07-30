@@ -6,8 +6,11 @@ const registerSlice = createSlice({
     currentUser: [],
     isLoggedIn: false,
     cart: JSON.parse(localStorage.getItem("cart_items")) || [],
-    uid: null,
+   
+    username: null, // Add username to the initial state
+    uid: null, // Add uid to the initial state
   },
+ 
   reducers: {
     login: (state, action) => {
       state.currentUser = action.payload;
@@ -27,37 +30,19 @@ const registerSlice = createSlice({
       state.currentUser = [];
       state.isLoggedIn = false;
       state.username = null;
+      state.uid = null;
     },
     addToCart: (state, action) => {
-      
-      state.cart.push(action.payload);
-
-      localStorage.setItem(state.uid, JSON.stringify(state.cart));  // Save cart items to Local Storage with the username as the key
+      const product = action.payload;
     },
-   increaseQuantity: (state, action) => {
-      const productId = action.payload.id;
-      if (state.cart[productId]) {
-        state.cart[productId].quantity += 1;
-        localStorage.setItem("cart_items", JSON.stringify(state.cart));
-      }
-    },
-    decreaseQuantity: (state, action) => {
-      const productId = action.payload.id;
-      if (state.cart[productId] && state.cart[productId].quantity > 0) {
-        state.cart[productId].quantity -= 1;
-        localStorage.setItem("cart_items", JSON.stringify(state.cart));
-      }
-    },
+   
     removeItem: (state, action) => {
-      const productId = action.payload.id;
-      if (state.cart[productId]) {
-        delete state.cart[productId];
-        localStorage.setItem("cart_items", JSON.stringify(state.cart));
-      }
-    },
+      const product = action.payload;
+    }
+
   },
 });
 
-export const { login, logout, register,addToCart  } =registerSlice.actions;
+export const { login, logout, register,addToCart, removeItem  } =registerSlice.actions;
 
 export default registerSlice.reducer;

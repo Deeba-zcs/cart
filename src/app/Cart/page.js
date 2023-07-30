@@ -1,19 +1,19 @@
 'use client'
-import React from "react";
+import React ,{useState}from "react";
 import { useSelector,useDispatch } from "react-redux";
 import {Button } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  increaseQuantity,
-  decreaseQuantity,
+ 
   removeItem,
 } from "src/app/Store/registerslice.js";
 
 function Cartpage() {
   const currentUser = useSelector((state) => state.signup.currentUser);
   const cartItems = JSON.parse(localStorage.getItem("cartState")) || {};
-  const userCartItems = cartItems[currentUser.id] || [];
+ 
+  const [userCartItems, setUserCartItems] = useState(cartItems[currentUser.id] || []);
   console.log(userCartItems);
   const dispatch = useDispatch();
   const handleIncreaseQuantity = (item) => {
@@ -25,8 +25,28 @@ function Cartpage() {
   };
 
   const handleRemoveItem = (item) => {
+    // Dispatch the action to remove the item from the Redux store
     dispatch(removeItem(item));
+  
+    // Get the current cart items from local storage
+    const existingCartItems = JSON.parse(localStorage.getItem("cartState")) || {};
+
+    // Get the cart items of the current user
+    let updatedCartItems = existingCartItems[currentUser.id] || [];
+  
+    // Filter out the selected item from the cart
+    updatedCartItems = updatedCartItems.filter((cartItem) => cartItem.id !== item.id);
+  
+    // Update the local storage with the updated cart items
+    existingCartItems[currentUser.id] = updatedCartItems;
+    localStorage.setItem("cartState", JSON.stringify(existingCartItems));
+  
+    // Update the userCartItems state with the filtered cart items
+    setUserCartItems(updatedCartItems); // Make sure to set the updatedCartItems to the state
+  
+   
   };
+
   const subtotal =userCartItems
   .reduce(
     (accumulator, item) => accumulator + item.price * item.quantity,
