@@ -16,30 +16,22 @@ function Productpage() {
       .then((result) => setItems(result));
   }, []);
 
-  
-
   const addToCartHandler = (product) => {
-  
     dispatch(addToCart(product));
-  
-   
+
     const existingCartItems = localStorage.getItem("cartState");
     const cartItems = existingCartItems ? JSON.parse(existingCartItems) : {};
-  
-   
+
     const userCart = cartItems[currentUser.id] || [];
-  
-    
+
     const productExists = userCart.some((item) => item.id === product.id);
-  
+
     if (productExists) {
-      
       alert("Product is already in the cart!");
     } else {
       product.quantity = 1;
       userCart.push(product);
-  
-    
+
       cartItems[currentUser.id] = userCart;
       localStorage.setItem("cartState", JSON.stringify(cartItems));
     }

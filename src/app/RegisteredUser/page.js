@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 function RegisteredUserList() {
    const usedata = JSON.parse(localStorage.getItem("userData")) || [];
- // const currentUser = useSelector((state) => state.signup.users ||[]);
+
   let count = 1;
   // console.log("registerd user", usedata);
   return (
